@@ -16,6 +16,8 @@ try {
 
 app.use(express.json());
 
+app.use("/v1/payment_sources", require("./src/routes/paymentSourceRoutes"));
+
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}...`);
 });
