@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const { connect } = require("mongoose");
 const { PORT = 3000, MONGO_URI } = process.env;
+const API_VERSION = "v1";
 
 try {
   connect(MONGO_URI, {
@@ -16,7 +17,11 @@ try {
 
 app.use(express.json());
 
-app.use("/v1/payment_sources", require("./src/routes/paymentSourceRoutes"));
+app.use(
+  `/${API_VERSION}/payment_sources`,
+  require("./src/routes/paymentSourceRoutes")
+);
+app.use(`/${API_VERSION}/rides`, require("./src/routes/rideRoutes"));
 
 app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}...`);

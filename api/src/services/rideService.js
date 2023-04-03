@@ -6,10 +6,10 @@ const rides = async () => {
 };
 
 const requestRide = async (data) => {
-  const { origin, userID } = data;
+  const { origin, userId } = data;
   const driver = await Ride.findOne({ type: "Driver", status: "idle" });
   const rideData = {
-    rider: userID,
+    rider: userId,
     driver: driver._id,
     origin,
     status: "on-course",
