@@ -21,7 +21,6 @@ const createPaymentSource = async (data) => {
     }
   );
 
-  console.log(response);
   const { payment_source_id } = response.data;
 
   const paymentSourceData = {
