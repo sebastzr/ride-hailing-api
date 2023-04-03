@@ -1,19 +1,11 @@
 require("dotenv").config();
 const express = require("express");
+const { connect } = require("./src/db/connection");
 const app = express();
-const { connect } = require("mongoose");
-const { PORT = 3000, MONGO_URI } = process.env;
+const { PORT = 3000 } = process.env;
 const API_VERSION = "v1";
 
-try {
-  connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  console.log("Connected to mongodb!");
-} catch (error) {
-  console.log(`Failed connecting to mongodb, Error: \n${error}`);
-}
+connect();
 
 app.use(express.json());
 

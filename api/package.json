@@ -5,12 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start:local": "nodemon"
+    "start:local": "nodemon --legacy-watch",
+    "db:seed": "node ./src/db/seed.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@googlemaps/google-maps-services-js": "^3.3.28",
     "axios": "^1.3.4",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

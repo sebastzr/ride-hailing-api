@@ -12,15 +12,11 @@ const rideSchema = Schema(
       ref: "User",
     },
     origin: {
-      coordinates: {
-        type: [Number],
-        required: true,
-      },
+      type: String,
+      required: true,
     },
     destination: {
-      coordinates: {
-        type: [Number],
-      },
+      type: String,
     },
     status: {
       type: String,

@@ -6,9 +6,13 @@ const FEES = Object.freeze({
 
 const WOMPI_ENDPOINTS = Object.freeze({
   PAYMENT_SOURCES: "/payment_sources",
+  TRANSACTIONS: "/transactions",
 });
+
+const CURRENCY = "COP";
 
 module.exports = {
   FEES,
   WOMPI_ENDPOINTS,
+  CURRENCY,
 };

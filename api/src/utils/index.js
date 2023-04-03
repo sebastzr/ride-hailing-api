@@ -1,28 +1,30 @@
-const { Client } = require("@googlemaps/google-maps-services-js");
-const { FEES } = require("../constants");
-const { GOOGLE_MAPS_KEY } = process.env;
+const { FEES, CURRENCY, WOMPI_ENDPOINTS } = require("../constants");
+const axios = require("axios");
+const { WOMPI_URL, WOMPI_PRIVATE_KEY } = process.env;
 
 const emailValidator = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 };
 
-const calculateRideDistance = async (origin, destination) => {
-  try {
-    const client = new Client({});
-    const response = await client.distancematrix({
-      params: {
-        origins: origin,
-        destination: destination,
-        key: GOOGLE_MAPS_KEY,
-      },
-      timeout: 1000,
-    });
+const deg2rad = (deg) => {
+  return deg * (Math.PI / 180);
+};
 
-    const distance = response.data.rows[0].elements[0].distance.value / 1000;
-    return distance;
-  } catch (error) {
-    console.log(error);
-  }
+const calculateRideDistance = async (origin, destination) => {
+  const [lat1, lon1] = origin.split(",").map((numStr) => parseInt(numStr));
+  const [lat2, lon2] = destination.split(",").map((numStr) => parseInt(numStr));
+  const R = 6371; // Earth's radius in km
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) *
+      Math.cos(deg2rad(lat2)) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // Distance in km
+  return distance;
 };
 
 const calculateRideDuration = (createdAt) => {
@@ -42,7 +44,29 @@ const calculateRideCost = async (data) => {
   return cost;
 };
 
+const createTransaction = async (data) => {
+  const { cost, email, paymentSource, rideId, installments } = data;
+  const response = await axios.post(
+    `${WOMPI_URL}${WOMPI_ENDPOINTS.TRANSACTIONS}`,
+    {
+      amount_in_cents: cost,
+      currency: CURRENCY,
+      customer_email: email,
+      payment_method: paymentSource.type === "CARD" ? { installments } : null,
+      reference: rideId,
+      payment_source_id: paymentSource.paymentSourceId,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${WOMPI_PRIVATE_KEY}`,
+      },
+    }
+  );
+  console.log("Transaction: ", response.data);
+};
+
 module.exports = {
   emailValidator,
   calculateRideCost,
+  createTransaction,
 };

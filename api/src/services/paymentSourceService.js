@@ -21,12 +21,12 @@ const createPaymentSource = async (data) => {
     }
   );
 
-  const { payment_source_id } = response.data;
+  const { id } = response.data.data;
 
   const paymentSourceData = {
     user: userID,
     type,
-    paymentSourceId: payment_source_id,
+    paymentSourceId: id,
   };
 
   const newPaymentSource = await PaymentSource.create(paymentSourceData);
