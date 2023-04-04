@@ -38,6 +38,8 @@ describe("createPaymentSource", () => {
 
     const paymentSource = await createPaymentSource(data);
 
+    expect(axios.post).toHaveBeenCalledTimes(1);
+    expect(PaymentSource.create).toHaveBeenCalledTimes(1);
     expect(paymentSource).toEqual(expectedPaymentSource);
   });
 });
